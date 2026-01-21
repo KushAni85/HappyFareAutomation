@@ -93,7 +93,7 @@ public class HappyFaresCalendar {
         }
 
         // -------- DATE SELECTION ONLY (AFTER LOOP) --------
-        String day = String.valueOf(targetDate.getDayOfMonth());
+        String day = String.valueOf(targetDate.getDayOfMonth()); // 2025-12-7
         String calendarIndex = targetOnRight ? "2" : "1";
 
         By exactDay = By.xpath(
@@ -103,8 +103,8 @@ public class HappyFaresCalendar {
 
         WaitUtil.waitForClickable(driver, exactDay).click();
 
-        ExtentManager.getTest()
-                .pass("Successfully selected travel date: " + targetDate);
+        ExtentManager.getTest().pass("Successfully selected travel date: " + targetDate);
     }
 
+    // how you will write dynamic xpath
 }

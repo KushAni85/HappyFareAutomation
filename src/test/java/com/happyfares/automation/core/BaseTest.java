@@ -9,7 +9,7 @@ public class BaseTest extends TestConfiguration {
     public void setUp() {
         WebDriverFactory.initDriver(browser);
         WebDriverFactory.getDriver().manage().window().maximize();
-        WebDriverFactory.getDriver().get(browser);
+        WebDriverFactory.getDriver().get(baseUrl);
     }
 
     @AfterMethod
