@@ -12,7 +12,7 @@ public class JavaScriptUtil {
 
     public static void ScrollToElement(WebDriver driver , WebElement element) {
         ((JavascriptExecutor) driver).executeScript(
-                "argumnets[0].scrollIntoView({behaviour:'smooth',block:'start'});",
+                "arguments[0].scrollIntoView({behaviour:'smooth',block:'start'});",
                 element
         );
     }

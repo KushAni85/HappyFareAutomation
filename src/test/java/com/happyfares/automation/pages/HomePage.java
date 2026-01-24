@@ -2,6 +2,7 @@ package com.happyfares.automation.pages;
 
 import com.happyfares.automation.reporting.ExtentManager;
 import com.happyfares.automation.utils.HappyFaresCalendar;
+import com.happyfares.automation.utils.JavaScriptUtil;
 import com.happyfares.automation.utils.WaitUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -11,6 +12,13 @@ import java.time.LocalDate;
 
 public class HomePage {
     private WebDriver driver;
+
+    //--------------Expected Values ( shared test context) -----------------
+    public static String expectedFrom;
+    public static String expectedTo;
+    public static LocalDate expectedDate;
+
+
 
     private By fromcity = By.xpath("//input[contains(@placeholder,\"Select Origin City\")]");
     private By toCity = By.xpath("//input[contains(@placeholder,\"Select Destination City\")]");
@@ -22,24 +30,29 @@ public class HomePage {
         this.driver = driver;
     }
 
-    public void SelectFromCity(String city) {
+    public void SelectFromCity(String city ) {
+        expectedFrom = city;
+
         WaitUtil.waitForVisible(driver, fromcity);
         WebElement from = driver.findElement(fromcity);
         from.click();
         from.clear();
         from.sendKeys(city);
-        from.click();
+        WaitUtil.waitForVisible(driver, By.cssSelector("#anguScroll_dropdown .angucomplete-row"));
+        JavaScriptUtil.clickByjs(driver,"document.querySelector('#anguScroll_dropdown .angucomplete-row')?.click();");
     }
 
     public void SelectToCity(String city) {
+        expectedTo = city;
         WaitUtil.waitForVisible(driver, fromcity);
         WebElement to = driver.findElement(toCity);
         to.click();
         to.clear();
         to.sendKeys(city);
 
+//        WaitUtil.waitForVisible(driver, By.cssSelector("#anguScroll_dropdown .angucomplete-row"));
         WaitUtil.waitForVisible(driver, By.cssSelector("#anguScroll_dropdown .angucomplete-row"));
-        to.click();
+        JavaScriptUtil.clickByjs(driver,"document.querySelector('#anguScroll_dropdown .angucomplete-row')?.click();");
     }
 
     public void openDepartureCalendar() {
@@ -49,6 +62,10 @@ public class HomePage {
 
     public By getCalendarRoot() {
         return By.xpath("//div[contains(@class,\"dtePic-body\")]");
+    }
+
+    public void setExpectedDate(LocalDate date) {
+        expectedDate = date;
     }
 
     public void search() {
@@ -65,6 +82,8 @@ public class HomePage {
         SelectToCity(toCity);
         ExtentManager.getTest().info("Selected Destination city " + toCity);
 
+        setExpectedDate(traveldate);
+        ExtentManager.getTest().info("Selected Destination city " + traveldate);
 
         openDepartureCalendar();
         calendar.pick(getCalendarRoot(), traveldate);

@@ -17,14 +17,14 @@ import java.time.LocalDate;
 @Listeners(com.happyfares.automation.reporting.TestListener.class)
 public class HomePageTest extends BaseTest {
 
+    //---------Test Data ------------
+    String fromCity = "Delhi";
+    String toCity = "Mumbai";
+
+    LocalDate traveldate = LocalDate.of(2026, 6, 21);
+
     @Test(retryAnalyzer = RetryAnalyzer.class, priority = 1, groups = {"regression"})
     public void verifyFlightSearch() throws InterruptedException {
-
-        //---------Test Data ------------
-        String fromCity = "Delhi";
-        String toCity = "Mumbai";
-
-        LocalDate traveldate = LocalDate.of(2026, 6, 21);
 
         //page object
         HomePage home = new HomePage(WebDriverFactory.getDriver());
