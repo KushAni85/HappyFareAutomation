@@ -3,6 +3,7 @@ package com.happyfares.automation.pages;
 import com.happyfares.automation.reporting.ExtentManager;
 import com.happyfares.automation.utils.JavaScriptUtil;
 import com.happyfares.automation.utils.WaitUtil;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -117,6 +118,55 @@ public class SearchResultsPage {
         return selectedFlightName;
     }
 
+    //================================
+    // Default sorting -> Ascending (CHEAPEST FIRST)
+    //================================
+
+    public boolean isPriceSortedAscendingByDefault(){
+        waitForCards();
+        List<Long> prcies = fetchAllPrices();
+        List<WebElement> filters = driver.findElements(priceFilter);
+
+        if(!filters.isEmpty()) {
+            JavaScriptUtil.ScrollToElement(driver, filters.get(0));
+        }
+
+        for(int i =0; i < prcies.size()-1; i++) {
+            if(prcies.get(i) > prcies.get(i+1)) {
+                return false;
+            }
+
+        }
+        ExtentManager.getTest().pass("Default sorting Validated: Prices are in ascending order");
+        return true;
+    }
+
+    //============================
+    //Logic to check if Price is appearing in Descending after clicking PRICE-fILTER
+    //============================
+
+    public boolean isPriceSortedDescendingAfterPriceFilter() {
+        waitForCards();
+        List<WebElement> filters = driver.findElements(priceFilter);
+
+        if(filters.isEmpty()) {
+            throw new AssertionError("Price filter is Missing or Unable to found...");
+        }
+        filters.get(0).click();
+        JavaScriptUtil.ScrollToElement(driver, filters.get(0));
+
+        List<Long> prcies = fetchAllPrices();
+
+        for(int i =0; i < prcies.size()-1; i++) {
+            if(prcies.get(i) < prcies.get(i+1)) {
+                return false;
+            }
+        }
+        ExtentManager.getTest().pass("TEST PASSED, Price is In Descending Order after clicking Price Filter");
+        return true;
+
+    }
+
     //----------------helpers methods---------------------
 
     private String extractDepartureDate() {
@@ -163,7 +213,7 @@ public class SearchResultsPage {
                 prices.add(price);
             }
         }
-        if(prices.size() <2 ) {
+        if(prices.size() < 2 ) {
             throw new AssertionError("Not enough valid prices to validate sorting");
         }
         return prices;

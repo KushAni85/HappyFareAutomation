@@ -58,6 +58,36 @@ public class SearchResultTest extends BaseTest {
         ExtentManager.getTest().pass("Flight selected successfully with exact price " + targetPrice);
 
   }
+    @Test(retryAnalyzer = RetryAnalyzer.class, priority = 3, groups = {"regression"})
+    public void PriceSortedAscendingByDefault() throws InterruptedException {
+        HomePage home = new HomePage(WebDriverFactory.getDriver());
+        HappyFaresCalendar calendar = new HappyFaresCalendar(WebDriverFactory.getDriver());
+        SearchResultsPage results = new SearchResultsPage(WebDriverFactory.getDriver());
+
+        //Steps
+        home.searchFlight(fromCity, toCity, traveldate, calendar);
+        Assert.assertTrue(WebDriverFactory.getDriver().getCurrentUrl().contains("flights"), "Did not navigate to Search Results page");
+        Assert.assertTrue(results.verifyFLightsPresent(), "No Flights on Search Page ");
+
+        Assert.assertTrue(results.isPriceSortedAscendingByDefault(),"Flight Price is Not in Ascending..");
+
+  }
+
+    @Test(retryAnalyzer = RetryAnalyzer.class, priority = 4, groups = {"regression"})
+    public void PriceSortedDescendingAfterPriceFilter() throws InterruptedException {
+        HomePage home = new HomePage(WebDriverFactory.getDriver());
+        HappyFaresCalendar calendar = new HappyFaresCalendar(WebDriverFactory.getDriver());
+        SearchResultsPage results = new SearchResultsPage(WebDriverFactory.getDriver());
+
+        //Steps
+        home.searchFlight(fromCity, toCity, traveldate, calendar);
+        Assert.assertTrue(WebDriverFactory.getDriver().getCurrentUrl().contains("flights"), "Did not navigate to Search Results page");
+        Assert.assertTrue(results.verifyFLightsPresent(), "No Flights on Search Page ");
+
+        Assert.assertTrue(results.isPriceSortedDescendingAfterPriceFilter(),"Flight Price is Not in Ascending..");
+
+    }
+
 
 
 }
